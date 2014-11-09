@@ -1,3 +1,6 @@
+
+
+
 Meteor.startup(function() {
 
   var serialPort = new SerialPort.SerialPort("/dev/tty.usbserial-A600dVw9", { 
@@ -11,22 +14,31 @@ Meteor.startup(function() {
   });
 
   //receive data
-  serialPort.on('data', function(data) {
-      console.log('receive', data);
-  });
+  // serialPort.on('data', function(data) {
+  //     console.log('receive', data);
+  // });
 
   //send data
-  var b = 122;
-  var sendToSerialPort = function() {
+  var sendToSerialPort = function(rgb, effect) {
     if (!open) return;
-    
-    b = (b+122) % 255;
-    
-    serialPort.write("ls\n"+b);
-    serialPort.write("ls\n"+22);
-    serialPort.write("ls\n"+33)
+    console.log('send', effect, rgb.r, rgb.g, rgb.b)
+    serialPort.write("ls\n"+effect);
+    serialPort.write("ls\n"+rgb.r);
+    serialPort.write("ls\n"+rgb.g);
+    serialPort.write("ls\n"+rgb.b);
   };
 
-  Meteor.setInterval(sendToSerialPort, 1000);
 
+  Tracker.autorun(function() {
+    var color = Color.findOne({field: 'color'});
+    var effect = Color.findOne({field: 'effect'});
+
+    if (!color || !effect)
+      return;
+
+    rgb = tinycolor(color.value).toRgb();
+    effect = effect.value == 'blink' ? 3 : effect.value == 'fade' ? 2 : 1;
+
+    sendToSerialPort(rgb, effect);
+  });
 });
