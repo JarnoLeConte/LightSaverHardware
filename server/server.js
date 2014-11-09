@@ -29,7 +29,7 @@ Meteor.startup(function() {
   };
 
 
-  Tracker.autorun(function() {
+  Meteor.setInterval(function() {
     var color = Color.findOne({field: 'color'});
     var effect = Color.findOne({field: 'effect'});
 
@@ -40,5 +40,5 @@ Meteor.startup(function() {
     effect = effect.value == 'blink' ? 3 : effect.value == 'fade' ? 2 : 1;
 
     sendToSerialPort(rgb, effect);
-  });
+  }, 200);
 });
