@@ -1,3 +1,3 @@
 
-remote = DDP.connect("http://localhost:3000");
+remote = DDP.connect("http://lightsaver.meteor.com");
 Color = new Mongo.Collection('color', {connection: remote});  

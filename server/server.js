@@ -40,5 +40,5 @@ Meteor.startup(function() {
     effect = effect.value == 'blink' ? 3 : effect.value == 'fade' ? 2 : 1;
 
     sendToSerialPort(rgb, effect);
-  }, 200);
+  }, 400);
 });
